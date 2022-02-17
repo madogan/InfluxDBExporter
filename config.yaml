@@ -1,0 +1,47 @@
+# InfluxDB Connection Parameters.
+influx:
+  host: localhost
+  port: 8086
+  username: admin
+  password: admin
+  database: test
+
+# Data connection definitions to get data.
+connections:
+  oracle: # Name of connection.
+    database_type: oracle 
+    host: localhost
+    port: 1521
+    sid: xe
+    username: system
+    password: oracle
+  mssql:
+    database_type: mssql 
+    host: localhost
+    port: 1433
+    username: sa
+    password: qweQWE123*
+    database: null
+    instancename: null
+
+# Queries that fetch data 
+# FROM connection AND write to influxdb.
+jobs:
+  oracle_test:
+    interval: 5s
+    connection_name: oracle
+    columns:  
+     - F
+     - I
+     - TS
+    time_column_name: TS
+    query: SELECT f, i, ts FROM test WHERE ts >= sysdate - 5/(24*60)
+  mssql_test:
+    interval: 5s
+    connection_name: mssql
+    columns:  
+     - f
+     - i
+     - ts
+    time_column_name: ts
+    query: SELECT f, i, ts FROM test WHERE ts >= DATEADD(minute,-1,GETDATE())

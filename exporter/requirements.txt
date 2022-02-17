@@ -1,0 +1,7 @@
+PyYAML==6.0
+pydantic==1.9.0
+cx-Oracle==8.3.0
+schedule==1.1.0
+loguru==0.6.0
+influxdb==5.3.1
+pymssql==2.2.4
