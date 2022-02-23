@@ -21,12 +21,14 @@ logger.add(
 logger.add(
     "/var/log/influxdbexport_{time}.log", 
     format="[{time}] [{level}] {message}", 
-    rotation="30 MB"
+    rotation="250 MB"
 )
 
 
 def execute_job(influx: InfluxConnection, job: Job):
     try:
+        now = datetime.datetime.now()
+
         if type(job.connection) == OracleConnection:
             connection_connector = OracleConnector(**job.connection.json())
         elif type(job.connection) == MSSqlConnection:
@@ -58,7 +60,6 @@ def execute_job(influx: InfluxConnection, job: Job):
             if type(ts) == str:
                 ts = datetime.datetime.strptime(ts, '%H:%M')
 
-            now = datetime.datetime.now()
             ts = ts.replace(
                 year=now.year,
                 month=now.month,
@@ -72,7 +73,7 @@ def execute_job(influx: InfluxConnection, job: Job):
                 'fields': row
             }
             points.append(point)
-            logger.info(f'Point: {" ".join(f"{k}={v}" for k, v in point.items())}')
+            # logger.info(f'Point: {" ".join(f"{k}={v}" for k, v in point.items())}')
 
         result = destination.write_points(points)
         logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
