@@ -85,7 +85,7 @@ def execute_job(influx: InfluxConnection, job: Job):
 
 def main():
     logger.info('Starting...')
-    config_path = sys.argv[1]
+    config_path = sys.argv[1].strip()
     logger.info(f'Config path: {config_path}')
     config = parse_config(config_path)
     logger.info(f'Config: {config}')
