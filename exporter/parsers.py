@@ -31,7 +31,3 @@ def parse_config(path: str) -> Config:
         )
 
     return config
-
-
-if __name__ == '__main__':
-    print(parse_config('config.yaml'))

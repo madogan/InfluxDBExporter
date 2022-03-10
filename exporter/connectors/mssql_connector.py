@@ -42,8 +42,8 @@ class MSSqlConnector:
             )
             self.connection.commit()
         except Exception as e:
+            print(f'MSSql Error: {e}')
             self.connection.rollback()
-            print(e)
 
     def fetchall(self, sql: str, data: List = []) -> Any:
         self.cursor.execute(

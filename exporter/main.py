@@ -1,3 +1,4 @@
+import re
 import sys
 import time
 import datetime
@@ -42,19 +43,18 @@ def execute_job(influx: InfluxConnection, job: Job):
         else:
             raise Exception(f'Unknown database type: {type(job.connection)}')
 
-        logger.info('#' * 50)
+        logger.info('\n' + '#' * 50)
         logger.info(f'Running job: {job.name}')
-        logger.info(f'Job: {job.query}')
+        logger.info(f'Query: {job.query}')
         logger.info(f'Tags: {job.tags}')
         logger.info(f'Interval: {job.interval}')
-        logger.info('#' * 50)
 
         destination = InfluxConnector(**influx.json())
         destination.connect()
         connection_connector.connect()
 
         points = []
-        rows = connection_connector.fetchall(job.query)
+        rows = connection_connector.fetchall(re.sub('\s+', ' ', job.query, re.I | re.M))
         logger.info(f'{len(rows)} are fetched from {job.connection.name}')
         for row in rows:
             ts = row.pop(job.time_column_name, None)
@@ -80,6 +80,8 @@ def execute_job(influx: InfluxConnection, job: Job):
             }
             points.append(point)
 
+        result = False
+        
         if len(points) > 0:
             logger.info(
                 f'First Point: {" ".join(f"{k}={v}" for k, v in points[0].items())}')
@@ -87,7 +89,8 @@ def execute_job(influx: InfluxConnection, job: Job):
                 f'Last Point: {" ".join(f"{k}={v}" for k, v in points[-1].items())}')
 
             result = destination.write_points(points)
-            logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
+
+        logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
 
         connection_connector.close()
         destination.close()

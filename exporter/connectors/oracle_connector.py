@@ -27,7 +27,7 @@ class OracleConnector:
                 lib_dir=os.environ.get('LD_LIBRARY_PATH', 'C:\OracleClient'),
             )
         except Exception as e:
-            print(e)
+            print(f'Oracle Error: {e}')
             pass
 
     def connect(self) -> bool:
@@ -50,6 +50,7 @@ class OracleConnector:
         self.connection.commit()
 
     def fetchall(self, sql: str, data: List = []) -> Any:
+        print(f'Oracle: {sql}')
         self.cursor.execute(
             sql,
             data,
