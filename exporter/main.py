@@ -79,15 +79,16 @@ def execute_job(influx: InfluxConnection, job: Job):
                 'fields': row
             }
             points.append(point)
-            # logger.info(f'Point: {" ".join(f"{k}={v}" for k, v in point.items())}')
 
-        logger.info(
-            f'First Point: {" ".join(f"{k}={v}" for k, v in points[0].items())}')
-        logger.info(
-            f'Last Point: {" ".join(f"{k}={v}" for k, v in points[-1].items())}')
-        result = destination.write_points(points)
-        logger.info(
-            f'({result}) {job.name} {len(points)} points are inserted!')
+        if len(points) > 0:
+            logger.info(
+                f'First Point: {" ".join(f"{k}={v}" for k, v in points[0].items())}')
+            logger.info(
+                f'Last Point: {" ".join(f"{k}={v}" for k, v in points[-1].items())}')
+
+            result = destination.write_points(points)
+            logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
+
         connection_connector.close()
         destination.close()
     except Exception as e:
