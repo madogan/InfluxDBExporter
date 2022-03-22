@@ -31,15 +31,13 @@ class OracleConnector:
             pass
 
     def connect(self) -> bool:
-        # Create cx_Oracle connection.
         self.connection = cx_Oracle.connect(
             user=self.user, password=self.password, dsn=cx_Oracle.makedsn(
                 host=self.host,
                 port=self.port,
                 sid=self.sid,
-            ),
+            ) ,
         )
-        # Create cursor.
         self.cursor = self.connection.cursor()
     
     def execute(self, sql: str, data: List = []) -> Any:
@@ -50,11 +48,7 @@ class OracleConnector:
         self.connection.commit()
 
     def fetchall(self, sql: str, data: List = []) -> Any:
-        print(f'Oracle: {sql}')
-        self.cursor.execute(
-            sql,
-            data,
-        )
+        self.cursor.execute(sql, data)
         columns = [col[0] for col in self.cursor.description]
         self.cursor.rowfactory = lambda *args: dict(zip(columns, args))
         return self.cursor.fetchall()

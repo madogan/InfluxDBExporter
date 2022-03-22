@@ -1,5 +1,6 @@
 import re
 import sys
+from threading import Thread
 import time
 import datetime
 import pytz
@@ -22,81 +23,82 @@ logger.add(
 logger.add(
     "/var/log/influxdbexporter/influxdbexport.log",
     format="[{time}] [{level}] {message}",
-    rotation="250 MB"
+    rotation="30 MB"
 )
 
 
 def execute_job(influx: InfluxConnection, job: Job):
-    try:
-        now = datetime.datetime.now()
+    def inner():
+        try:
+            now = datetime.datetime.now()
 
-        if now.hour >= 23 and now.minute >= 55:
-            return
+            if now.hour >= 23 and now.minute >= 55:
+                return
 
-        if now.hour <= 0 and now.minute <= 5:
-            return
+            if now.hour <= 0 and now.minute <= 5:
+                return
 
-        if type(job.connection) == OracleConnection:
-            connection_connector = OracleConnector(**job.connection.json())
-        elif type(job.connection) == MSSqlConnection:
-            connection_connector = MSSqlConnector(**job.connection.json())
-        else:
-            raise Exception(f'Unknown database type: {type(job.connection)}')
+            if type(job.connection) == OracleConnection:
+                connection_connector = OracleConnector(**job.connection.json())
+            elif type(job.connection) == MSSqlConnection:
+                connection_connector = MSSqlConnector(**job.connection.json())
+            else:
+                raise Exception(f'Unknown database type: {type(job.connection)}')
 
-        logger.info('\n' + '#' * 50)
-        logger.info(f'Running job: {job.name}')
-        logger.info(f'Query: {job.query}')
-        logger.info(f'Tags: {job.tags}')
-        logger.info(f'Interval: {job.interval}')
+            logger.info('\n' + '#' * 50)
+            logger.info(f'Running job: {job.name}')
+            logger.info(f'Query: {job.query}')
+            logger.info(f'Tags: {job.tags}')
+            logger.info(f'Interval: {job.interval}')
 
-        destination = InfluxConnector(**influx.json())
-        destination.connect()
-        connection_connector.connect()
+            destination = InfluxConnector(**influx.json())
+            destination.connect()
+            connection_connector.connect()
 
-        points = []
-        rows = connection_connector.fetchall(re.sub('\s+', ' ', job.query, re.I | re.M))
-        logger.info(f'{len(rows)} are fetched from {job.connection.name}')
-        for row in rows:
-            ts = row.pop(job.time_column_name, None)
+            points = []
+            rows = connection_connector.fetchall(re.sub('\s+', ' ', job.query, re.I | re.M))
+            logger.info(f'{len(rows)} are fetched from {job.connection.name}')
+            for row in rows:
+                ts = row.pop(job.time_column_name, None)
 
-            if not time:
-                logger.error('Time column is not found')
-                continue
+                if not time:
+                    logger.error('Time column is not found')
+                    continue
 
-            if type(ts) == str:
-                ts = datetime.datetime.strptime(ts, '%H:%M')
+                if type(ts) == str:
+                    ts = datetime.datetime.strptime(ts, '%H:%M')
 
-            ts = ts.replace(
-                year=now.year,
-                month=now.month,
-                day=now.day,
-            ).astimezone(tz=pytz.utc)
+                ts = ts.replace(
+                    year=now.year,
+                    month=now.month,
+                    day=now.day,
+                ).astimezone(tz=pytz.utc)
 
-            point = {
-                'measurement': job.name,
-                'tags': job.tags,
-                'time': ts,
-                'fields': row
-            }
-            points.append(point)
+                point = {
+                    'measurement': job.name,
+                    'tags': job.tags,
+                    'time': ts,
+                    'fields': row
+                }
+                points.append(point)
 
-        result = False
-        
-        if len(points) > 0:
-            logger.info(
-                f'First Point: {" ".join(f"{k}={v}" for k, v in points[0].items())}')
-            logger.info(
-                f'Last Point: {" ".join(f"{k}={v}" for k, v in points[-1].items())}')
+            result = False
+            
+            if len(points) > 0:
+                logger.info(f'First Point: {" ".join(f"{k}={v}" for k, v in points[0].items())}')
+                logger.info(f'Last Point: {" ".join(f"{k}={v}" for k, v in points[-1].items())}')
 
-            result = destination.write_points(points)
+                result = destination.write_points(points)
 
-        logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
+            logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
 
-        connection_connector.close()
-        destination.close()
-    except Exception as e:
-        logger.exception(e)
+            connection_connector.close()
+            destination.close()
+        except Exception as e:
+            logger.exception(e)
 
+    thread = Thread(target=inner, daemon=True)
+    thread.start()
 
 def main():
     logger.info('Starting...')
@@ -117,7 +119,7 @@ def main():
 
     while True:
         schedule.run_pending()
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 if __name__ == '__main__':

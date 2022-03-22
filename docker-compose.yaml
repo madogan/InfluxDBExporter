@@ -7,7 +7,6 @@ services:
   grafana:
     image: grafana/grafana:8.2.6
     env_file: configuration.env
-    user: '1066247'
     ports:
       - '3000:3000'
     volumes:
