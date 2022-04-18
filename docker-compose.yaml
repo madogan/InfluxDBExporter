@@ -5,7 +5,7 @@ volumes:
 
 services:
   grafana:
-    image: grafana/grafana:8.2.6
+    image: grafana/grafana:8.4.5
     env_file: configuration.env
     ports:
       - '3000:3000'
