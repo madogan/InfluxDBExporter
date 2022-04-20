@@ -23,13 +23,15 @@ class OracleConnector:
         self.user = username
         self.password = password
 
+        lib_dir = os.environ.get('LD_LIBRARY_PATH', None)
+
+        if not lib_dir:
+            raise ValueError('LD_LIBRARY_PATH is not set!')
+
         try:
-            cx_Oracle.init_oracle_client(
-                lib_dir=os.environ.get('LD_LIBRARY_PATH', 'C:\OracleClient'),
-            )
+            cx_Oracle.init_oracle_client(lib_dir=lib_dir)
         except Exception as e:
-            print(f'Oracle Error: {e}')
-            pass
+            print('Oracle client already initiliazed.')
 
     def connect(self) -> bool:
         self.connection = cx_Oracle.connect(
