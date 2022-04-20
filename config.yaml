@@ -2,9 +2,9 @@
 influx:
   host: localhost
   port: 8086
+  database: test
   username: admin
   password: obPXfETqTSXsi1eH/qqpMFzsnh44guHS2A5PNEy7j+0=
-  database: test
 
 # Data connection definitions to get data.
 connections:
@@ -19,10 +19,10 @@ connections:
     database_type: mssql 
     host: localhost
     port: 1433
-    username: sa
-    password: KUwEAJcen4xYyWGplDYYa0X+RFP8mlbZTE5gEMFJFIU=
     database: null
     instancename: null
+    username: sa
+    password: KUwEAJcen4xYyWGplDYYa0X+RFP8mlbZTE5gEMFJFIU=
 
 # Queries that fetch data 
 # FROM connection AND write to influxdb.
