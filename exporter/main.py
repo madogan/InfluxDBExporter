@@ -22,7 +22,7 @@ logger.add(
     colorize=True
 )
 logger.add(
-    "./influxdbexporter/influxdbexport.log",
+    "./logs/influxdbexport.log",
     format="[{time}] [{level}] {message}",
     rotation="100 MB",
     retention="7 days"
@@ -33,10 +33,10 @@ def execute_job(influx: InfluxConnection, job: Job):
     try:
         now = datetime.datetime.now()
 
-        if now.hour >= 23 and now.minute >= 55:
+        if now.hour >= 23 and now.minute >= 58:
             return
 
-        if now.hour <= 0 and now.minute <= 5:
+        if now.hour <= 0 and now.minute <= 2:
             return
 
         if type(job.connection) == OracleConnection:
@@ -126,7 +126,7 @@ def main():
             execute_job, 
             'interval', 
             seconds=job.interval.total_seconds(),
-            misfire_grace_time=seconds-3,
+            misfire_grace_time=int(seconds-3),
             args=(config.influx, job)
         )
 
