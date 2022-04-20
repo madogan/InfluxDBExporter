@@ -12,7 +12,7 @@ oracle_connector = OracleConnector(
     port=1521,
     sid='xe',
     username='system',
-    password='oracle',
+    password='DSkb/rwKF/vmIQMJX+yMOvofn+aMTsea1y4txKv6+ro=',
 )
 oracle_connector.connect()
 
@@ -21,7 +21,7 @@ mssql_connector = MSSqlConnector(
     host='localhost',
     port= 1433,
     username= 'sa',
-    password='qweQWE123*',
+    password='KUwEAJcen4xYyWGplDYYa0X+RFP8mlbZTE5gEMFJFIU=',
 )
 mssql_connector.connect()
 
