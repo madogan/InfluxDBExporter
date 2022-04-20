@@ -1,5 +1,6 @@
 import pymssql
 
+from aes import decrypt
 from typing import Any, List
 
 
@@ -30,7 +31,7 @@ class MSSqlConnector:
             server=self.instancename,
             database=self.database,
             user=self.username,
-            password=self.password,
+            password=decrypt(self.password),
         )
         self.cursor = self.connection.cursor(as_dict=True)
 

@@ -1,6 +1,7 @@
 import os
 import cx_Oracle
 
+from aes import decrypt
 from typing import Any, List
 
 
@@ -32,7 +33,7 @@ class OracleConnector:
 
     def connect(self) -> bool:
         self.connection = cx_Oracle.connect(
-            user=self.user, password=self.password, dsn=cx_Oracle.makedsn(
+            user=self.user, password=decrypt(self.password), dsn=cx_Oracle.makedsn(
                 host=self.host,
                 port=self.port,
                 sid=self.sid,

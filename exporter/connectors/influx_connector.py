@@ -1,6 +1,6 @@
+from aes import decrypt
 from typing import List
 from influxdb import InfluxDBClient
-
 
 class InfluxConnector:
     client = None
@@ -24,7 +24,7 @@ class InfluxConnector:
             host=self.host,
             port=self.port,
             username=self.username,
-            password=self.password,
+            password=decrypt(self.password),
         )
         
         # Get list of databases and check if database exists.
