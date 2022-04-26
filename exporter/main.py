@@ -67,7 +67,7 @@ def execute_job(influx: InfluxConnection, job: Job):
                 continue
 
             if type(ts) == str:
-                ts = datetime.datetime.strptime(ts, '%H:%M')
+                ts = datetime.datetime.strptime(ts, job.time_column_format)
 
             ts = ts.replace(
                 year=now.year,

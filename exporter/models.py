@@ -75,6 +75,7 @@ class Job(BaseModel):
     connection: Union[OracleConnection, MSSqlConnection]
     interval: datetime.timedelta
     time_column_name: str
+    time_column_format: str = '%H:%M'
     tags: Dict = {}
     query: str
     columns: List[str] = []

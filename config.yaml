@@ -44,4 +44,5 @@ jobs:
      - i
      - ts
     time_column_name: ts
+    time_column_format: '%Y-%m-%d	%X'
     query: SELECT f, i, ts FROM test WHERE ts >= DATEADD(minute,-1,GETDATE())
