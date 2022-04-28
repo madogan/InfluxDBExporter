@@ -75,6 +75,14 @@ def execute_job(influx: InfluxConnection, job: Job):
                 day=now.day,
             ).astimezone(tz=pytz.utc)
 
+            keys = list(row.keys())
+            for key in keys:
+                if row[key] == None:
+                    row.pop(key)
+
+            if len(row) == 0:
+                continue
+
             point = {
                 'measurement': job.name,
                 'tags': job.tags,
