@@ -31,8 +31,8 @@ class InfluxConnector:
         # And swicth to the database.
         databases = self.client.get_list_database()
         databases = [str(d['name']) for d in databases]
-        if self.database not in databases:
-            self.client.create_database(self.database)
+        # if self.database not in databases:
+        #     self.client.create_database(self.database)
         self.client.switch_database(self.database)
 
     def write_points(
