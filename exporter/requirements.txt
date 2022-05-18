@@ -16,6 +16,7 @@ importlib-resources==5.4.0
 influxdb==5.3.1
 loguru==0.6.0
 msgpack==1.0.3
+pycrypto==2.6.1
 pydantic==1.9.0
 pyfiglet==0.8.post1
 pymssql==2.2.4
