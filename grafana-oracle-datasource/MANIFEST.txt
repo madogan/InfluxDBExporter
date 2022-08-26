@@ -1,0 +1,99 @@
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "grafana",
+  "signedByOrg": "grafana",
+  "signedByOrgName": "Grafana Labs",
+  "plugin": "grafana-oracle-datasource",
+  "version": "2.2.0",
+  "time": 1658517429022,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "CHANGELOG.md": "b75e3291b538aa3b2b444ce34634d8bfbe439c539ef79637631248a7e8226774",
+    "LICENSE": "3416968ea747b008ae1468587166834eda3c2ee53038d8a6b1ce40757725ec42",
+    "README.md": "12f1e24537cbd0c337e1d192d321af4a3f2910d78243fb3bc6e3a5c294f5cbe7",
+    "dashboards/ORACLE-MULTI-DB-TEST.json": "29c2ccdd87dc706e58f24c20ab9a48ba7aa1a5dfe25cbff0240985a244b071d3",
+    "img/oracle_logo.gif": "5acdb6abd92e324aaceef2bfe297579220589959ea51f119139ee96c8c056656",
+    "lib/linux_x64/instantclient_21_6/BASIC_LITE_LICENSE": "3f93d041a4f86a820697a6fca29e859b37afa9a7a31897f793bbd92276059dc1",
+    "lib/linux_x64/instantclient_21_6/BASIC_LITE_README": "87e35be3391c563b3f122af6ccddd2b3fc7566ad3a202d2766a8b8fb08beefa4",
+    "lib/linux_x64/instantclient_21_6/adrci": "09c50b0f9440ef6c64869cc9060d88dd6283ac331d2eb4c4a4897b07033dbce4",
+    "lib/linux_x64/instantclient_21_6/genezi": "e05883bc4a1d9510ba8383976c072c028331b2155c148173cd20de078cdf2513",
+    "lib/linux_x64/instantclient_21_6/libaio.so": "b7aee30297ffea6df9c6b96c1d7d9b68d23fb065fd42a6e0013f0375bc049b00",
+    "lib/linux_x64/instantclient_21_6/libaio.so.1": "b7aee30297ffea6df9c6b96c1d7d9b68d23fb065fd42a6e0013f0375bc049b00",
+    "lib/linux_x64/instantclient_21_6/libaio.so.1.0.1": "b7aee30297ffea6df9c6b96c1d7d9b68d23fb065fd42a6e0013f0375bc049b00",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.10.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.11.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.12.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.18.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.19.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.20.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntsh.so.21.1": "6a604845eab68cfc80ed860941569984f0e6376bc67e85af491fcd72054fe45a",
+    "lib/linux_x64/instantclient_21_6/libclntshcore.so": "90a979263045df28d94f258267b45de341aeef3cd5e7693b718c62fe97905721",
+    "lib/linux_x64/instantclient_21_6/libclntshcore.so.12.1": "90a979263045df28d94f258267b45de341aeef3cd5e7693b718c62fe97905721",
+    "lib/linux_x64/instantclient_21_6/libclntshcore.so.18.1": "90a979263045df28d94f258267b45de341aeef3cd5e7693b718c62fe97905721",
+    "lib/linux_x64/instantclient_21_6/libclntshcore.so.19.1": "90a979263045df28d94f258267b45de341aeef3cd5e7693b718c62fe97905721",
+    "lib/linux_x64/instantclient_21_6/libclntshcore.so.20.1": "90a979263045df28d94f258267b45de341aeef3cd5e7693b718c62fe97905721",
+    "lib/linux_x64/instantclient_21_6/libclntshcore.so.21.1": "90a979263045df28d94f258267b45de341aeef3cd5e7693b718c62fe97905721",
+    "lib/linux_x64/instantclient_21_6/libnnz21.so": "a96695febff637d60ab2bcc6ed1af0b3ddc1d0b11ba8212efff388195ae0f71a",
+    "lib/linux_x64/instantclient_21_6/libocci.so": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.10.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.11.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.12.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.18.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.19.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.20.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci.so.21.1": "0789fe99330ecffad48bf352c55f1f2b3f4e574d6e84776d7cfdb65977533997",
+    "lib/linux_x64/instantclient_21_6/libocci_gcc53.so": "ef8286ec31387e71e63f004826751d6d5e63779693814b13dbc56bde4154acb3",
+    "lib/linux_x64/instantclient_21_6/libocci_gcc53.so.21.1": "ef8286ec31387e71e63f004826751d6d5e63779693814b13dbc56bde4154acb3",
+    "lib/linux_x64/instantclient_21_6/libociicus.so": "bea5dbae25d6e128b82d6cda21753ddd8295f50cccacf3500c10a0c8ddd71966",
+    "lib/linux_x64/instantclient_21_6/libocijdbc21.so": "3822b84ae2aaed2a03ae10c405738a44941fc5d7619ce6dba44f430721c79155",
+    "lib/linux_x64/instantclient_21_6/liboramysql.so": "1931d420df5ab7eea961f6a7d06e47a9e4c2dc74175c84164359ff6acaa451ce",
+    "lib/linux_x64/instantclient_21_6/libresolv.so": "8d869d68599de97eac6dec4463bc8a7b08880c8eafa0cbc61615e1fdf08fd2e8",
+    "lib/linux_x64/instantclient_21_6/libresolv.so.2": "8d869d68599de97eac6dec4463bc8a7b08880c8eafa0cbc61615e1fdf08fd2e8",
+    "lib/linux_x64/instantclient_21_6/network/admin/README": "ebfadcf79550a57b5a89427b760510012526495403fba1fcac96b92122e10fea",
+    "lib/linux_x64/instantclient_21_6/ojdbc8.jar": "974b553004970e157a570ce6d6c4e6f08e994e40c19e24c641810cc60b0c5fe4",
+    "lib/linux_x64/instantclient_21_6/ucp.jar": "1d6db356f75d0a82338659bb15d8fc01ebcabc11d8aea4493dc54449ec9f841b",
+    "lib/linux_x64/instantclient_21_6/uidrvci": "9bdd1a9ddcc24f177b4fa3c43af21ea17c5276556eea1282ef43b056e96bc365",
+    "lib/linux_x64/instantclient_21_6/xstreams.jar": "1c7a793f36d6804198899d727de3e622e884ee26371e672f702d6ede4be62f5c",
+    "module.js": "bf694238ea175565013e4efee969b1686deccd3b3aa3b716bee08fed84b33ca1",
+    "module.js.LICENSE.txt": "0d8f66cd4afb566cb5b7e1540c68f43b939d3eba12ace290f18abc4f4cb53ed0",
+    "module.js.map": "eb910a8f3f2170bc5ca2557c863e8b9417629440b4d82baece07493e89a8400d",
+    "oracle-plugin_linux_amd64": "cbb92706554a1b4f21cac717c953ade8c05678ae75314b99a4de084a94a5ad10",
+    "partials/annotations.editor.html": "633cebfdf278f50c63b4f4c54cab0daa2a07b4ddf5226097e7a278b982885719",
+    "plugin.json": "8f9c286130721ebbffd2ebd8e12168afd070b6a38ca7e6b84bf6a9f2336facab",
+    "screenshots/oracle-annotation-displayed.png": "1ee3058be7e1cda7f8047e87a68e166934c669e4919967419bf6f90f253ae377",
+    "screenshots/oracle-basic-auth-test-and-save.png": "0ff5296eb2656faed8dd41fc111b309d0bb79f9bc30a39c15321bcb04a5bcc36",
+    "screenshots/oracle-config-with-timezone-option.png": "ee34c1fc61329821f9bb9349e4f35198ecfedd8e83b0d41e7404453c6da63945",
+    "screenshots/oracle-datasource-list.png": "126ddab7d2fc582a445194aa0209116a3b1a6f2b16b413ab9b7fae97e05eb4f2",
+    "screenshots/oracle-datasource-setup.png": "172edcd8a329ad07a3290780888dbe634644fa84b960842b14297c7f6bd02c80",
+    "screenshots/oracle-datasource-step-1.png": "4fc73859fc64bafe5ded0ac3ad95e579ec015ab73c03396507f08203079777d1",
+    "screenshots/oracle-datasource-step-2.png": "0c6a8eb0147f608c879a09033628ecbcab5cde0423cc0986a55453d03f6cec2a",
+    "screenshots/oracle-datasource-step-3.png": "b4f8d705d89b9c313d04d13aa910ce77d8aa370733d6b6004623c295df411307",
+    "screenshots/oracle-datasource-step-4.png": "09d786893331bc907b5058ab5a2e28eafacd730aaee36673c34c4aaef046f9fe",
+    "screenshots/oracle-datasource-step-5.png": "04052a20c16db3845b051ac7bd11d9063ad418279aaca684e5eb5062922c60ad",
+    "screenshots/oracle-datasource-step-6.png": "57ef9af0234b2b36369b39b253c1aa9c0e06175ed182be3ebf630508a6c47bde",
+    "screenshots/oracle-kerberos-config.png": "e6f11fa669a71134a41f4ecdedfdea4656a2f1e6fbc1d599c84a6d31478d4a53",
+    "screenshots/oracle-orig-basic-auth.png": "80087e2c4eb7cd5559fa8a43ab837e5f78389fd432bdaf21627560032810e4f0",
+    "screenshots/oracle-tnsnames-basicauth.png": "803e62995d50dd297cca2ee7fa1f2a7979988feb550db5ac4d607a33c32da9a6",
+    "screenshots/oracle-types-dashboard-full.png": "81d0eb7954efbef4c3bd21d5c42fda9be6c1f1ff21436b24e94afe4f85172169",
+    "screenshots/oracle-types-graph-panel-types-1.png": "c32ce4675aa43e5e99853549f34646bb6b263d1a4cb1393949bf5e6e79d4b4df",
+    "screenshots/oracle-types-table-panel-types-1-timestyle.png": "e261294d2203e0d50e22fab632c4b093a1a92c66502fddc9ea7288458df46784",
+    "screenshots/oracle-types-table-panel-types-1.png": "9842687c0160a6ebe824337bbc6c8617e03e7a5d076400732a81955e5bab9304",
+    "tz/data.json": "b99897c53520380536ef5d0c9bb2482fdd79b674b1310d8347d688ae15ff9d22"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+Version: OpenPGP.js v4.10.10
+Comment: https://openpgpjs.org
+
+wrgEARMKAAYFAmLa97UAIQkQfk0ManCIZucWIQTzOyW2kQdOhGNlcPN+TQxq
+cIhm50qMAgkB1/UHa+fq3SnyADDI85Lg7r2C1FKYVNgiOIQrhB2P4dWgxyJV
+b8Slx864NbKYDgU6QyNPPr1lcDcSgr+HMF9nT1ECCKJ9cdyNlU76jt9sGNGX
+JwzcW9pVdh+KDx1b76i8xQwFsWbqgSHz+f+hAr9faolo/eB1t6baBdGc8b1k
+LZw0bwIh
+=7WBV
+-----END PGP SIGNATURE-----
