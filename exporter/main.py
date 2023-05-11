@@ -62,9 +62,9 @@ def execute_job(influx: InfluxConnection, job: Job):
         for row in rows:
             ts = row.pop(job.time_column_name, None)
 
-            if not time:
-                logger.error('Time column is not found')
-                continue
+            if not ts:
+                logger.error('Time column is not found, stamping now!')
+                ts = datetime.datetime.now()
 
             if type(ts) == str:
                 ts = datetime.datetime.strptime(ts, job.time_column_format)
