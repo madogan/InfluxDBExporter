@@ -74,7 +74,7 @@ class Job(BaseModel):
     name: str
     connection: Union[OracleConnection, MSSqlConnection]
     interval: datetime.timedelta
-    time_column_name: str
+    time_column_name: str = None
     time_column_format: str = '%H:%M'
     tags: Dict = {}
     query: str
