@@ -1,10 +1,5 @@
-import datetime
 import json
-import re
-import pytz
 import requests
-
-from typing import List
 
 
 class APIConnector:
