@@ -3,7 +3,6 @@ import datetime
 
 from enum import Enum
 from typing import Dict, List, Union
-from unicodedata import name
 from pydantic import BaseModel, validator
 
 
@@ -11,6 +10,7 @@ class DatabaseType(Enum):
     oracle = "oracle"
     mssql = "mssql"
     influx = "influx"
+    api = "api"
 
 
 class MSSqlConnection(BaseModel):
@@ -33,7 +33,6 @@ class MSSqlConnection(BaseModel):
         }
 
 
-# Create InfluxDB connection according to config.yaml.
 class InfluxConnection(BaseModel):
     host: str
     port: int
@@ -51,7 +50,6 @@ class InfluxConnection(BaseModel):
         }
 
 
-# Create Oracle connection class according to config.yaml.
 class OracleConnection(BaseModel):
     name: str
     host: str
@@ -70,19 +68,20 @@ class OracleConnection(BaseModel):
         }
 
 
-class Job(BaseModel):
+class APIConnection(BaseModel):
     name: str
-    connection: Union[OracleConnection, MSSqlConnection]
-    interval: datetime.timedelta
-    time_column_name: str = None
-    time_column_format: str = '%H:%M'
-    tags: Dict = {}
-    query: str
-    columns: List[str] = []
+    url: str
+    
+    def json(self):
+        return {
+            "url": self.url,
+        }
 
-    @validator('query', pre=True)
-    def clean_query_string(cls, v):
-        return re.sub(r'\s+', ' ', v).strip()
+
+class BaseJob(BaseModel):
+    name: str
+    interval: datetime.timedelta
+    tags: Dict = {}
 
     @validator('tags', pre=True)
     def validate_tags(cls, v):
@@ -121,6 +120,35 @@ class Job(BaseModel):
         return datetime.timedelta(**interval_json)
 
 
+class APIJob(BaseJob):
+    connection: APIConnection
+    endpoint: str
+    key: str
+    label: str = None
+    
+    @validator('endpoint', pre=True)
+    def clean_endpoint_string(cls, v):
+        return re.sub(r'\s+', ' ', v).strip()
+
+    @validator('label', pre=True)
+    def assign_key_if_none(cls, label, values):
+        if label is None:
+            return values['key']
+        return label
+
+
+class DatabaseJob(BaseJob):
+    connection: Union[OracleConnection, MSSqlConnection]
+    time_column_name: str = None
+    time_column_format: str = '%H:%M'
+    query: str
+    columns: List[str] = []
+
+    @validator('query', pre=True)
+    def clean_query_string(cls, v):
+        return re.sub(r'\s+', ' ', v).strip()
+
+
 class Config(BaseModel):
     influx: InfluxConnection = None
-    jobs: Dict[str, Job] = {}
+    jobs: Dict[str, Union[APIJob, DatabaseJob]] = {}

@@ -1,6 +1,6 @@
 import yaml
 
-from models import Config, InfluxConnection, Job, DatabaseType, MSSqlConnection, OracleConnection
+from models import Config, InfluxConnection, MSSqlConnection, OracleConnection, APIConnection, APIJob, DatabaseJob
 
 
 def parse_config(path: str) -> Config:
@@ -19,15 +19,26 @@ def parse_config(path: str) -> Config:
             connections[name] = OracleConnection(name=name, **values)
         elif database_type == 'mssql':
             connections[name] = MSSqlConnection(name=name, **values)
+        elif database_type == 'api':
+            connections[name] = APIConnection(name=name, **values)
         else:
             raise Exception(f'Unknown database type: {database_type}')
 
     for name, values in data['jobs'].items():
         connection_name = values.pop('connection_name')
-        config.jobs[name] = Job(
-            name=name, 
-            connection=connections[connection_name], 
-            **values
-        )
+        connection = connections[connection_name]
+        
+        if type(connection) == APIConnection:
+            config.jobs[name] = APIJob(
+                name=name, 
+                connection=connection, 
+                **values
+            )
+        else:
+            config.jobs[name] = DatabaseJob(
+                name=name, 
+                connection=connection, 
+                **values
+            )
 
     return config

@@ -2,17 +2,20 @@ import os
 import re
 import sys
 import time
+from typing import Union
 import pytz
 import datetime
 
 from loguru import logger
 from parsers import parse_config
+from connectors.api_connector import APIConnector
 from connectors.mssql_connector import MSSqlConnector
 from connectors.influx_connector import InfluxConnector
 from connectors.oracle_connector import OracleConnector
 from apscheduler.schedulers.background import BackgroundScheduler
-from models import Job, OracleConnection, MSSqlConnection, InfluxConnection
 from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
+from models import APIJob,DatabaseJob, OracleConnection, MSSqlConnection, InfluxConnection, APIConnection
+
 
 logger.remove(0)
 logger.add(
@@ -29,7 +32,7 @@ logger.add(
 )
 
 
-def execute_job(influx: InfluxConnection, job: Job):
+def execute_job(influx: InfluxConnection, job: Union[DatabaseJob, APIJob]):
     try:
         now = datetime.datetime.now()
 
@@ -39,42 +42,48 @@ def execute_job(influx: InfluxConnection, job: Job):
         if now.hour <= 0 and now.minute <= 2:
             return
 
-        if type(job.connection) == OracleConnection:
-            connection_connector = OracleConnector(**job.connection.json())
-        elif type(job.connection) == MSSqlConnection:
-            connection_connector = MSSqlConnector(**job.connection.json())
-        else:
-            raise Exception(f'Unknown database type: {type(job.connection)}')
-
         logger.info('\n' + '#' * 50)
         logger.info(f'Running job: {job.name}')
-        logger.info(f'Query: {job.query}')
         logger.info(f'Tags: {job.tags}')
         logger.info(f'Interval: {job.interval}')
 
         destination = InfluxConnector(**influx.json())
         destination.connect()
+
+        if type(job.connection) == OracleConnection:
+            connection_connector = OracleConnector(**job.connection.json())
+        elif type(job.connection) == MSSqlConnection:
+            connection_connector = MSSqlConnector(**job.connection.json())
+        elif type(job.connection) == APIConnection:
+            connection_connector = APIConnector(**job.connection.json())
+        else:
+            raise Exception(f'Unknown database type: {type(job.connection)}')
+        
         connection_connector.connect()
 
         points = []
-        rows = connection_connector.fetchall(re.sub('\s+', ' ', job.query, re.I | re.M))
-        logger.info(f'{len(rows)} are fetched from {job.connection.name}')
+        if type(connection_connector) != APIConnector:
+            rows = connection_connector.fetchall(job.query)
+        else:
+            rows = connection_connector.fetchall(job.endpoint, job.key, job.label)
         for row in rows:
-            ts = row.pop(job.time_column_name, None)
+            if type(connection_connector) != APIConnector:
+                ts = row.pop(job.time_column_name, None)
 
-            if not ts:
-                logger.error('Time column is not found, stamping now!')
+                if not ts:
+                    ts = datetime.datetime.now()
+
+                if type(ts) == str:
+                    ts = datetime.datetime.strptime(ts, job.time_column_format)
+            else:
                 ts = datetime.datetime.now()
-
-            if type(ts) == str:
-                ts = datetime.datetime.strptime(ts, job.time_column_format)
-
+            
             ts = ts.replace(
                 year=now.year,
                 month=now.month,
                 day=now.day,
             ).astimezone(tz=pytz.utc)
-
+                
             keys = list(row.keys())
             for key in keys:
                 if row[key] == None:
@@ -90,7 +99,7 @@ def execute_job(influx: InfluxConnection, job: Job):
                 'fields': row
             }
             points.append(point)
-
+            
         result = False
         
         if len(points) > 0:

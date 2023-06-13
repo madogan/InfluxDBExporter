@@ -1,0 +1,19 @@
+influx:
+  host: localhost
+  port: 8086
+  database: test
+  username: admin
+  password: obPXfETqTSXsi1eH/qqpMFzsnh44guHS2A5PNEy7j+0=
+
+connections:
+  api:
+    database_type: api 
+    url: https://jsonplaceholder.typicode.com
+
+jobs:
+  api_test:
+    interval: 5s
+    connection_name: api
+    endpoint: /todos/1
+    key: title
+    label: Title
