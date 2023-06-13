@@ -50,56 +50,42 @@ def execute_job(influx: InfluxConnection, job: Union[DatabaseJob, APIJob]):
         destination = InfluxConnector(**influx.json())
         destination.connect()
 
-        if type(job.connection) == OracleConnection:
-            connection_connector = OracleConnector(**job.connection.json())
-        elif type(job.connection) == MSSqlConnection:
-            connection_connector = MSSqlConnector(**job.connection.json())
-        elif type(job.connection) == APIConnection:
-            connection_connector = APIConnector(**job.connection.json())
+        if isinstance(job.connection, OracleConnection):
+            connection_connector = OracleConnector(**job.connection.dict())
+        elif isinstance(job.connection, MSSqlConnection):
+            connection_connector = MSSqlConnector(**job.connection.dict())
+        elif isinstance(job.connection, APIConnection):
+            connection_connector = APIConnector(**job.connection.dict())
         else:
             raise Exception(f'Unknown database type: {type(job.connection)}')
-        
+
         connection_connector.connect()
 
         points = []
-        if type(connection_connector) != APIConnector:
-            rows = connection_connector.fetchall(job.query)
-        else:
+        if isinstance(connection_connector, APIConnector):
             rows = connection_connector.fetchall(job.endpoint, job.key, job.label)
+        else:
+            rows = connection_connector.fetchall(job.query)
+
         for row in rows:
-            if type(connection_connector) != APIConnector:
-                ts = row.pop(job.time_column_name, None)
+            ts = row.pop(job.time_column_name, None) or datetime.datetime.utcnow()
 
-                if not ts:
-                    ts = datetime.datetime.now()
+            if isinstance(ts, str):
+                ts = datetime.datetime.strptime(ts, job.time_column_format)
 
-                if type(ts) == str:
-                    ts = datetime.datetime.strptime(ts, job.time_column_format)
-            else:
-                ts = datetime.datetime.now()
+            ts = ts.replace(year=now.year, month=now.month, day=now.day).astimezone(tz=pytz.utc)
+
+            row = {k: v for k, v in row.items() if v is not None}
             
-            ts = ts.replace(
-                year=now.year,
-                month=now.month,
-                day=now.day,
-            ).astimezone(tz=pytz.utc)
-                
-            keys = list(row.keys())
-            for key in keys:
-                if row[key] == None:
-                    row.pop(key)
+            if row:
+                point = {
+                    'measurement': job.name,
+                    'tags': job.tags,
+                    'time': ts,
+                    'fields': row
+                }
+                points.append(point)
 
-            if len(row) == 0:
-                continue
-
-            point = {
-                'measurement': job.name,
-                'tags': job.tags,
-                'time': ts,
-                'fields': row
-            }
-            points.append(point)
-            
         result = False
         
         if len(points) > 0:

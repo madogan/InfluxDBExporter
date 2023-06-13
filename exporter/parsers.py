@@ -4,41 +4,33 @@ from models import Config, InfluxConnection, MSSqlConnection, OracleConnection, 
 
 
 def parse_config(path: str) -> Config:
-    config = Config()
-
     with open(path, 'rt') as fp:
         data = yaml.safe_load(fp.read())
 
-    config.influx = InfluxConnection(**data['influx'])
+    config = Config(influx=InfluxConnection(**data['influx']))
 
-    connections = {}
+    connections = {
+        name: {
+            'oracle': OracleConnection,
+            'mssql': MSSqlConnection,
+            'api': APIConnection
+        }[values.pop('database_type', None)](name=name, **values)
+        for name, values in data['connections'].items()
+    }
 
-    for name, values in data['connections'].items():
-        database_type = values.pop('database_type', None)
-        if database_type == 'oracle':
-            connections[name] = OracleConnection(name=name, **values)
-        elif database_type == 'mssql':
-            connections[name] = MSSqlConnection(name=name, **values)
-        elif database_type == 'api':
-            connections[name] = APIConnection(name=name, **values)
-        else:
-            raise Exception(f'Unknown database type: {database_type}')
+    job_types = {
+        APIConnection: APIJob,
+        OracleConnection: DatabaseJob,
+        MSSqlConnection: DatabaseJob,
+    }
 
-    for name, values in data['jobs'].items():
-        connection_name = values.pop('connection_name')
-        connection = connections[connection_name]
-        
-        if type(connection) == APIConnection:
-            config.jobs[name] = APIJob(
-                name=name, 
-                connection=connection, 
-                **values
-            )
-        else:
-            config.jobs[name] = DatabaseJob(
-                name=name, 
-                connection=connection, 
-                **values
-            )
+    config.jobs = {
+        name: job_types[type(connections[values['connection_name']])](
+            name=name,
+            connection=connections[values['connection_name']],
+            **values
+        )
+        for name, values in data['jobs'].items()
+    }
 
     return config
