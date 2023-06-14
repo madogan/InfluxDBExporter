@@ -51,11 +51,11 @@ def execute_job(influx: InfluxConnection, job: Union[DatabaseJob, APIJob]):
         destination.connect()
 
         if isinstance(job.connection, OracleConnection):
-            connection_connector = OracleConnector(**job.connection.dict())
+            connection_connector = OracleConnector(**job.connection.json())
         elif isinstance(job.connection, MSSqlConnection):
-            connection_connector = MSSqlConnector(**job.connection.dict())
+            connection_connector = MSSqlConnector(**job.connection.json())
         elif isinstance(job.connection, APIConnection):
-            connection_connector = APIConnector(**job.connection.dict())
+            connection_connector = APIConnector(**job.connection.json())
         else:
             raise Exception(f'Unknown database type: {type(job.connection)}')
 
@@ -68,10 +68,13 @@ def execute_job(influx: InfluxConnection, job: Union[DatabaseJob, APIJob]):
             rows = connection_connector.fetchall(job.query)
 
         for row in rows:
-            ts = row.pop(job.time_column_name, None) or datetime.datetime.utcnow()
+            if not isinstance(job, APIJob):
+                ts = row.pop(job.time_column_name, None) or datetime.datetime.now()
 
-            if isinstance(ts, str):
-                ts = datetime.datetime.strptime(ts, job.time_column_format)
+                if isinstance(ts, str):
+                    ts = datetime.datetime.strptime(ts, job.time_column_format)
+            else:
+                ts =  datetime.datetime.now()
 
             ts = ts.replace(year=now.year, month=now.month, day=now.day).astimezone(tz=pytz.utc)
 
