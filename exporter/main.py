@@ -79,7 +79,7 @@ def execute_job(influx: InfluxConnection, job: Union[DatabaseJob, APIJob]):
             ts = ts.replace(year=now.year, month=now.month, day=now.day).astimezone(tz=pytz.utc)
 
             row = {k: v for k, v in row.items() if v is not None}
-            
+
             if row:
                 point = {
                     'measurement': job.name,
@@ -99,10 +99,11 @@ def execute_job(influx: InfluxConnection, job: Union[DatabaseJob, APIJob]):
 
         logger.info(f'({result}) {job.name} {len(points)} points are inserted!')
 
-        connection_connector.close()
-        destination.close()
     except Exception as e:
         logger.exception(e)
+    finally:
+        connection_connector.close()
+        destination.close()
 
 
 def main():
