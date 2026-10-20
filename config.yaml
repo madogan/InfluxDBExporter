@@ -1,48 +1,42 @@
-# InfluxDB Connection Parameters.
 influx:
   host: localhost
-  port: 8086
-  database: test
-  username: admin
+  port: 8087
+  database: metrics
+  username: exporter
   password: obPXfETqTSXsi1eH/qqpMFzsnh44guHS2A5PNEy7j+0=
-
-# Data connection definitions to get data.
 connections:
-  oracle: # Name of connection.
-    database_type: oracle 
+  oracle:
+    database_type: oracle
     host: localhost
     port: 1521
-    sid: xe
+    service_name: ORCLPDB1
     username: system
-    password: DSkb/rwKF/vmIQMJX+yMOvofn+aMTsea1y4txKv6+ro=
+    password: 8U9a0/0syPllZBbddm5orDm1ROzcIU2yZKWZ6ZGbgd4=
   mssql:
-    database_type: mssql 
+    database_type: mssql
     host: localhost
     port: 1433
     database: null
     instancename: null
     username: sa
     password: KUwEAJcen4xYyWGplDYYa0X+RFP8mlbZTE5gEMFJFIU=
-
-# Queries that fetch data 
-# FROM connection AND write to influxdb.
 jobs:
   oracle_test:
     interval: 5s
     connection_name: oracle
-    columns:  
-     - F
-     - I
-     - TS
+    columns:
+    - F
+    - I
+    - TS
     time_column_name: TS
     query: SELECT f, i, ts FROM test WHERE ts >= sysdate - 5/(24*60)
   mssql_test:
     interval: 5s
     connection_name: mssql
-    columns:  
-     - f
-     - i
-     - ts
+    columns:
+    - f
+    - i
+    - ts
     time_column_name: ts
-    time_column_format: '%Y-%m-%d	%X'
+    time_column_format: "%Y-%m-%d\t%X"
     query: SELECT f, i, ts FROM test WHERE ts >= DATEADD(minute,-1,GETDATE())

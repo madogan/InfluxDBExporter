@@ -2,8 +2,8 @@ import re
 import datetime
 
 from enum import Enum
-from typing import Dict, List, Union
-from pydantic import BaseModel, validator
+from typing import Dict, List, Union, Optional
+from pydantic import BaseModel, validator, root_validator
 
 
 class DatabaseType(Enum):
@@ -54,15 +54,29 @@ class OracleConnection(BaseModel):
     name: str
     host: str
     port: int
-    sid: str
+    sid: Optional[str] = None
+    service_name: Optional[str] = None
     username: str
     password: str
+
+    @root_validator
+    def validate_oracle_identifier(cls, values):
+        sid = values.get("sid")
+        service_name = values.get("service_name")
+
+        if bool(sid) == bool(service_name):
+            raise ValueError(
+                "Specify exactly one of sid or service_name"
+            )
+
+        return values
 
     def json(self):
         return {
             "host": self.host,
             "port": self.port,
             "sid": self.sid,
+            "service_name": self.service_name,
             "username": self.username,
             "password": self.password,
         }

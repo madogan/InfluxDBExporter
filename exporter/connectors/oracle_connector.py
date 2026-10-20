@@ -1,7 +1,5 @@
 import datetime
-import os
-import re
-import cx_Oracle
+import oracledb
 import pytz
 
 from aes import decrypt
@@ -16,36 +14,44 @@ class OracleConnector:
         self,
         host: str,
         port: int,
-        sid: str,
         username: str,
-        password: str
+        password: str,
+        sid: str = None,
+        service_name: str = None,
     ):
         self.host = host
         self.port = port
         self.sid = sid
+        self.service_name = service_name
         self.user = username
         self.password = password
 
-        lib_dir = os.environ.get('LD_LIBRARY_PATH', None)
+        if bool(sid) == bool(service_name):
+            raise ValueError("Specify exactly one of sid or service_name")
 
-        if not lib_dir:
-            raise ValueError('LD_LIBRARY_PATH is not set!')
-
-        try:
-            cx_Oracle.init_oracle_client(lib_dir=lib_dir)
-        except Exception as e:
-            print('Oracle client already initiliazed.')
 
     def connect(self) -> bool:
-        self.connection = cx_Oracle.connect(
-            user=self.user, password=decrypt(self.password), dsn=cx_Oracle.makedsn(
+        if self.service_name:
+            dsn = oracledb.makedsn(
+                host=self.host,
+                port=self.port,
+                service_name=self.service_name,
+            )
+        else:
+            dsn = oracledb.makedsn(
                 host=self.host,
                 port=self.port,
                 sid=self.sid,
-            ) ,
+            )
+
+        self.connection = oracledb.connect(
+            user=self.user,
+            password=decrypt(self.password),
+            dsn=dsn,
         )
         self.cursor = self.connection.cursor()
-    
+        return True
+
     def execute(self, sql: str, data: List = []) -> Any:
         self.cursor.execute(
             sql,
